@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>エスター | MOVIE ARCHIVE</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="../Esther/esther.css">
+</head>
+
+<body class="movie-page-body">
+    <article class="main-content">
+
+
+        <header class="movie-header">
+            <h1 class="blood-title">エスター</h1>
+            <p class="movie-meta">2009 | 監督：ジャウム・コレット＝セラ | 製作：レオナルド・ディカプリオ</p>
+        </header>
+
+
+
+        <section class="intro-section">
+            <h3 class="section-title">【物語のあらすじ】</h3>
+            <div class="intro-box">
+                <p class="intro-text">
+                    流産で子供を亡くしたケイトとジョンの夫妻は、孤独な少女・エスターを養子として迎える。<br>
+                    聡明で、ピアノを弾きこなし、古風なドレスを身にまとう彼女。しかし、その完璧すぎる振る舞いの裏で、不可解な事件が次々と起こり始める。<br><br>
+                    エスターの首と手首に常に巻かれたリボン。決して人前で見せない裸。そして、彼女が時折見せる、子供とは思えない冷酷な眼差し。<br><br>
+                    <strong>「ママ、私のこと嫌いなの？」</strong><br>
+                    一家が崩壊へと進む中、ケイトが突き止めたエスターの「あまりにも残酷な真実」とは。
+                </p>
+            </div>
+        </section>
+
+
+
+
+        <div class="esther-tree-wrapper">
+            <div class="mode-switcher">
+                <label class="switch">
+                    <input type="checkbox" id="toggle-mode" onclick="toggleEstherMode()" aria-label="真実を暴くスイッチ"
+                        title="モード切り替え">
+                    <span class="slider"></span>
+                </label>
+                <span id="mode-label">† 関係図(表) †</span>
+            </div>
+
+            <div class="canvas mode-normal" id="tree-canvas">
+
+                <div class="node esther">
+                    <div class="photo-box" id="p-esther"></div>
+                    <div class="label-area">
+                        <span class="name">エスター</span>
+                        <p class="desc">養女 / 孤児院出身</p>
+                        <p class="cause-reveal">【正体】33歳の連続殺人犯 リーナ</p>
+                    </div>
+                </div>
+
+                <div class="node abigail">
+                    <div class="photo-box dead-style" id="p-abigail">
+                        <div class="x-mark">×</div>
+                    </div>
+                    <div class="label-area">
+                        <span class="name">アビゲイル</span>
+                        <p class="desc">聖マリアナ孤児院 職員</p>
+                        <p class="cause-reveal">原因：ハンマーで撲殺</p>
+                    </div>
+                </div>
+
+                <div class="node john">
+                    <div class="photo-box dead-style" id="p-john">
+                        <div class="x-mark">×</div>
+                    </div>
+                    <div class="label-area">
+                        <span class="name">ジョン</span>
+                        <p class="desc">父 / 建築家</p>
+                        <p class="cause-reveal">原因：十数箇所を刺殺</p>
+                    </div>
+                </div>
+
+                <div class="node kate">
+                    <div class="photo-box" id="p-kate"></div>
+                    <div class="label-area">
+                        <span class="name">ケイト</span>
+                        <p class="desc">母 / 元ピアニスト</p>
+                        <p class="cause-reveal">状態：生存（エスターを撃退）</p>
+                    </div>
+                </div>
+
+                <div class="node daniel">
+                    <div class="photo-box critical-style" id="p-daniel">
+                        <div class="critical-overlay"></div>
+                    </div>
+                    <div class="label-area">
+                        <span class="name">ダニエル</span>
+                        <p class="desc">長男</p>
+                        <p class="cause-reveal">原因：放火・枕による窒息未遂</p>
+                    </div>
+                </div>
+
+                <div class="node max">
+                    <div class="photo-box" id="p-max"></div>
+                    <div class="label-area">
+                        <span class="name">マックス</span>
+                        <p class="desc">長女 / 難聴</p>
+                        <p class="cause-reveal">状態：共犯強要による精神的重傷</p>
+                    </div>
+                </div>
+
+                <div class="lines-layer">
+                    <div class="line line-couple"></div>
+                    <div class="line line-vertical"></div>
+                    <div class="line line-horizontal"></div>
+                    <div class="line line-abigail"></div>
+                </div>
+            </div>
+        </div>
+
+        <hr class="divider">
+
+
+
+
+
+        <section class="story-arc-section">
+            <div class="spoiler-alert">
+                <div class="alert-icon">⚠</div>
+                <div class="alert-text">
+                    <strong>WARNING: SPOILER ALERT</strong>
+                    <p>これより先は、リーナ・クラマーに関する機密情報および結末が含まれます。<br>閲覧には細心の注意を払ってください。</p>
+                </div>
+            </div>
+
+            <div class="accordion-container">
+
+                <details class="arc-detail">
+                    <summary>
+                        <span class="arc-label">01 / 起</span>
+                        <span class="arc-subtitle">漆黒の天使の来訪</span>
+                        <div class="plus-icon">+</div>
+                    </summary>
+                    <div class="arc-content">
+                        <p>
+                            流産で3人目の子供を失い、深い悲しみに暮れるケイトとジョン。二人はその喪失感を埋めるため、地元の孤児院から一人の少女を養子に迎えることにする。<br><br>
+                            そこで出会ったのは、他の子供たちとは一線を画す、古風なドレスを着た聡明で礼儀正しい少女<strong>エスター</strong>だった。彼女はロシア出身で、驚くほど高い知性と教養、そして卓越したピアノの才能を持っていた。コールマン家は彼女を「新しい家族」として歓迎し、明るい未来を確信する。
+                        </p>
+                        <div class="uv-truth">
+                            【真実】エスターは最初から、自身の「脆弱性」を隠し、愛情に飢えたジョンを誘惑し、家庭を支配するための完璧なターゲットとしてコールマン家を選別していた。
+                        </div>
+                    </div>
+                </details>
+
+                <details class="arc-detail">
+                    <summary>
+                        <span class="arc-label">02 / 承</span>
+                        <span class="arc-subtitle">日常に潜む亀裂</span>
+                        <div class="plus-icon">+</div>
+                    </summary>
+                    <div class="arc-content">
+                        <p>
+                            生活を共にするにつれ、エスターの周囲で不可解な「事故」が頻発し始める。学校で彼女を揶揄した同級生が遊具から転落して重傷を負い、エスターを不審に思い忠告しに来たシスター・アビゲイルは、帰り道で何者かに襲撃され命を落とす。<br><br>
+                            母ケイトはエスターの冷酷な本性を直感するが、夫ジョンはエスターの巧みな演技に騙され、逆にケイトが「精神的に不安定だ」と疑うようになる。一家の絆は、エスターの計算高い離間工作によって内側から崩壊していく。
+                        </p>
+                        <div class="uv-truth">
+                            エスターはシスター・アビゲイルをハンマーで惨殺。兄ダニエルを恐怖で支配し、難聴の妹マックスを共犯に仕立て上げることで、周囲の口を封じていった。
+                        </div>
+                    </div>
+                </details>
+
+                <details class="arc-detail">
+                    <summary>
+                        <span class="arc-label">03 / 転</span>
+                        <span class="arc-subtitle">剥がされた33歳の仮面</span>
+                        <div class="plus-icon">+</div>
+                    </summary>
+                    <div class="arc-content">
+                        <p>
+                            エスターの異常性を確信したケイトは、彼女が以前いたとされるエストニアの「サール精神病院」へ連絡を取る。そこで突きつけられたのは、想像を絶する衝撃の事実だった。<br><br>
+                            彼女の正体は「エスター」という名の9歳の少女ではなく、<strong>リーナ・クラマーという33歳の女性</strong>。彼女は「下垂体機能低下症」という稀な病気により、身体の成長が子供のまま止まっていたのだ。彼女は過去にも同様の手口で複数の家庭に入り込み、男を誘惑し、拒絶されるとその家族を皆殺しにしてきた連続殺人犯だった。
+                        </p>
+                        <div class="uv-truth">
+                            【変貌】ケイトが真実を知った頃、家ではリーナが化粧を落とし、首と手首を拘束していた「リボン」を解き放つ。子供のフリをやめた殺人鬼の牙が剥かれる。
+                        </div>
+                    </div>
+                </details>
+
+                <details class="arc-detail">
+                    <summary>
+                        <span class="arc-label">04 / 結</span>
+                        <span class="arc-subtitle">凍てつく湖の終焉</span>
+                        <div class="plus-icon">+</div>
+                    </summary>
+                    <div class="arc-content">
+                        <p>
+                            正体を知られたリーナは暴走。夫ジョンを惨殺し、子供たちの命をも狙う。駆けつけたケイトは、血に染まった家の中でリーナとの死闘を繰り広げる。戦いの舞台は、家の裏にある凍てついた湖の上へと移る。<br><br>
+                            割れた氷から冷たい水の中へ落ちる二人。リーナは最後まで子供の声を装い「ママ、助けて！」と懇願するが、ケイトはその偽りの顔を蹴り飛ばし、冷徹に言い放つ。「私はあなたのママじゃない」。リーナは暗く深い湖の底へと沈んでいった。
+                        </p>
+                        <div class="uv-truth">
+                            【終焉】氷の下へ沈むリーナ・クラマー。残された家族は深い傷を負いながらも、最悪の悪夢から解放された。
+                        </div>
+                    </div>
+                </details>
+
+            </div>
+        </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <section class="medical-record-section">
+            <div class="folder-tab">TOP SECRET: CASE #93022</div>
+            <div class="record-paper">
+
+                <div class="photo-clip-area">
+                    <div class="paper-clip"></div>
+                    <div class="photo-frame" id="esther-photo">
+                        <div class="photo-overlay"></div>
+                    </div>
+                    <p class="photo-caption">患者近影（自称：9歳）</p>
+                </div>
+
+                <header class="record-header">
+                    <h3>サール精神病院：患者診療記録</h3>
+                    <p>発行日：<span class="redaction">████</span>年 <span class="redaction">██</span>月<span
+                            class="redaction">██</span>日 / エストニア・タルトゥ</p>
+                </header>
+
+                <div class="record-body">
+                    <div class="record-row">
+                        <span class="label">氏名:</span>
+                        <span class="value">リーナ・クラマー（自称：エスター）</span>
+                    </div>
+                    <div class="record-row">
+                        <span class="label">推定年齢:</span>
+                        <span class="value">33歳</span>
+                    </div>
+                    <div class="record-row">
+                        <span class="label">診断名:</span>
+                        <span class="value">重度の反社会性パーソナリティ障害、および<span class="redaction">下垂体機能低下症</span></span>
+                    </div>
+
+                    <div class="observation-box">
+                        <h4>【臨床的観察】</h4>
+                        <p>
+                            患者は極めて高い知能を有し、<span class="redaction">子供になりすますための完璧な化粧と演技</span>を習得している。<br>
+                            特に首と手首をリボンで隠す行為は、<span class="redaction">拘束具による傷跡</span>を隠蔽するためのものと推測される。<br><br>
+                            <strong>警告：</strong> 彼女は男性を誘惑し、拒絶されると狂暴化する傾向がある。過去に里親となった一家は<span
+                                class="redaction">全員が惨殺された状態で</span>発見された。
+                        </p>
+                    </div>
+                </div>
+
+                <div class="stamp-blood">DISCHARGED</div>
+            </div>
+        </section>
+
+
+
+
+
+        <section class="recommend-section">
+            <h3 class="section-title">【悪魔崇拝・血筋・不条理が好きな方へ】</h3>
+            <div class="recommend-grid">
+        
+                <div class="recommend-card">
+                    <div class="card-badge">監督: アリ・アスター</div>
+                    <h4>ミッドサマー</h4>
+                    <p>『ヘレディタリー』と同じ監督。夜が来ない村での祝祭が、いつの間にか逃げ場のない惨劇へ。太陽の下で行われる不気味な儀式は、ヘレディタリーとはまた違った「明るい地獄」を味わえます。</p>
+                </div>
+        
+                <div class="recommend-card">
+                    <div class="card-badge">ジェームズ・ワン監督</div>
+                    <h4>インシディアス</h4>
+                    <p>引っ越し先で起きる怪異、そして昏睡状態の息子。原因は「家」ではなく「子供」にあった……。悪魔が肉体を奪おうとする描写や、あちら側の世界のビジュアルが非常に不気味な傑作シリーズです。
+                    </p>
+                </div>
+        
+                <div class="recommend-card">
+                    <div class="card-badge">死体から始まる呪い</div>
+                    <h4>ジェーン・ドウの解剖</h4>
+                    <p>身元不明の美女の遺体を解剖していくうちに、遺体の内部から「あり得ないもの」が次々と発見される。医学と魔術が交差する、閉鎖空間での恐怖。ヘレディタリーの「歴史的・呪術的背景」が好きな人に最適です。
+                    </p>
+                </div>
+        
+                <div class="recommend-card">
+                    <div class="card-badge">タイ・韓国合作 / 衝撃作</div>
+                    <h4>女神の継承</h4>
+                    <p>タイの祈祷師一族を襲う、血筋の呪い。ある日、親戚の娘が「何者か」に憑依され、豹変していく様子をカメラが追う。ヘレディタリーと同じく『血筋からは逃げられない』というテーマを、凄まじいボルテージで描き切る傑作です。
+                    </p>
+                </div>
+        
+            </div>
+        </section>
+
+
+
+
+
+        <section class="streaming-info">
+            <div class="streaming-container">
+                <h3 class="info-title">この絶望を、その目で確かめる</h3>
+                <p class="info-text">現在、以下のプラットフォームで視聴可能です。※配信状況は時期により異なります。</p>
+
+                <div class="stream-buttons">
+                    <a href="https://www.primevideo.com/-/ja/detail/0N0G0FP1QC6EGQZJ20GF7HZWKA/ref=atv_dp_share_cu_r"
+                        target="_blank" rel="noopener" class="stream-btn amzn">
+                        <span class="btn-label">Amazon Prime Video</span>
+                        <span class="btn-action">今すぐ観る</span>
+                    </a>
+
+                    <a href="https://video-share.unext.jp/video/title/SID0039705?utm_source=copy&utm_medium=social&utm_campaign=nonad-sns"
+                        target="_blank" rel="noopener" class="stream-btn unext">
+                        <span class="btn-label">U-NEXT</span>
+                        <span class="btn-action">見放題で視聴</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+
+
+
+        <section class="final-warning">
+            <div class="blood-splatter"></div>
+            <div class="handwritten-message">
+                <p class="scrawl">I'm not your mommy...</p>
+                <p class="scrawl-jp">「いい子にしてたのに、どうして？」</p>
+            </div>
+            <div class="eye-contact-area">
+                <div class="esther-stare"></div>
+                <p class="closing-text">次は、あなたの家に行ってもいい？</p>
+            </div>
+        </section>
+
+
+
+
+        <footer class="site-footer">
+            <div class="footer-container">
+                <div class="footer-brand">
+                    <h2 class="footer-logo">エスター<span>- その少女は、何かがおかしい -</span></h2>
+                    <p class="footer-message">
+                        自分の目に映るものが、真実とは限らない
+                    </p>
+                </div>
+
+                <nav class="footer-nav">
+                </nav>
+
+                <div class="footer-bottom">
+                    <p class="copyright">&copy; 2026 Orphan Fan Analysis. </p>
+                </div>
+            </div>
+
+            <a href="../index.html" class="back-to-top" title="ツリーハウスへ戻る">
+                <svg viewBox="0 0 24 24">
+                    <path fill="currentColor" d="M12 3L2 12h3v8h6v-6h2v6h6v-8h3L12 3z" />
+                </svg>
+            </a>
+        </footer>
+
+
+
+        </div>
+        </section>
+    </article>
+
+    <script src="../Esther/esther.js"></script>
+</body>
+
+</html>

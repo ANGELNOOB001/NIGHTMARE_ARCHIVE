@@ -1,0 +1,899 @@
+/* ============================================================
+   4. 家系図レイアウト (FAMILY TREE)
+   ============================================================ */
+
+/* 1. 外枠：横スクロールの安定化 */
+.tree-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    /* レベル（段）を縦に並べる */
+    align-items: center;
+    /* ★ これで全レベルを中央に寄せる */
+    overflow-x: auto;
+    /* 横に飛び出た時だけスクロール */
+    padding: 40px 0;
+    background: #000;
+}
+
+/* 2. 世代の並び：絶対横並び固定 */
+.tree-level {
+    display: flex !important;
+    flex-direction: row !important;
+    /* ★ 絶対に横並び */
+    flex-wrap: nowrap !important;
+    /* ★ 折り返し禁止 */
+    justify-content: center;
+    /* 段の中身を中央寄せ */
+    align-items: flex-start;
+    gap: 20px;
+    margin: 0 auto;
+    width: max-content;
+    /* 中身の幅に合わせる */
+    padding: 10px 20px;
+}
+
+/* 3. キャラクターカード：カラーが映える暗黒背景 */
+.char-node {
+    flex: 0 0 120px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: linear-gradient(145deg, #1a1a1a, #0a0a0a);
+    border: 1px solid #4a3c2a;
+    /* 儀式の真鍮（しんちゅう）色 */
+    padding: 10px;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.9);
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.char-node:hover {
+    transform: translateY(-8px);
+    border-color: #8b4513;
+    /* ホバーで金が光る */
+    box-shadow: 0 15px 30px rgba(139, 69, 19, 0.3);
+}
+
+/* 4. 画像エリア：カラーを鮮明に解禁 */
+.char-img {
+    width: 100%;
+    height: 90px;
+    background: #111;
+    margin-bottom: 8px;
+    overflow: hidden;
+    border: 1px solid #333;
+}
+
+.char-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* モノクロ解除：彩度とコントラストを微調整して不気味さを維持 */
+    filter: sepia(0.1) contrast(1.1) saturate(1.1);
+    transition: filter 0.4s ease;
+}
+
+.char-node:hover .char-img img {
+    filter: sepia(0) contrast(1.2) saturate(1.3) brightness(1.1);
+}
+
+/* 5. 名前と説明：儀式の金（ゴールド）とグレー */
+.char-name {
+    font-size: 0.85rem;
+    color: #d2b48c;
+    /* 落ち着いたゴールド */
+    text-shadow: 1px 1px 2px #000;
+    margin: 4px 0;
+    font-weight: bold;
+    font-family: "Sawarabi Mincho", serif;
+}
+
+.char-desc {
+    font-size: 0.65rem;
+    color: #888;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    /* 古いブラウザ用 */
+    line-clamp: 3;
+    /* 【追加】最新の標準プロパティ */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* 6. 接続線（コネクター）：血と土の色 */
+.connector-v {
+    width: 2px;
+    height: 30px;
+    background: #4a3c2a;
+    margin: 5px auto;
+    /* 上下の隙間を作りつつ中央 */
+    flex-shrink: 0;
+}
+
+.connector-h {
+    width: 40px;
+    height: 2px;
+    background: #4a3c2a;
+    align-self: flex-start;
+    margin-top: 45px;
+    /* カードの画像中央の高さに合わせる */
+    flex-shrink: 0;
+}
+
+.connector-h.dashed {
+    background: none;
+    border-top: 2px dashed #8b0000;
+}
+
+/* 5. レベルごとの個別調整（ズレ防止） */
+.level-2 {
+    /* ジョーンがいる分、少し右に寄るのを防ぐならここを調整 */
+    padding-right: 0;
+}
+
+.level-3 {
+    gap: 40px;
+    /* 兄妹の間隔を少し広げて、上の両親の真下に合わせる */
+}
+
+/* 7. 特殊演出：DECEASED（死亡）を「鮮血」に変更 */
+.deceased::after {
+    content: "DECEASED";
+    position: absolute;
+    top: 35%;
+    left: 5%;
+    width: 90%;
+    color: #ff0000;
+    /* 鮮烈な赤 */
+    border: 2px solid #ff0000;
+    transform: rotate(-18deg);
+    background: rgba(40, 0, 0, 0.7);
+    font-size: 0.6rem;
+    font-weight: 900;
+    letter-spacing: 1px;
+    padding: 3px 0;
+    pointer-events: none;
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.4);
+    z-index: 10;
+}
+
+/* カルトメンバーの怪しい発光 */
+.cult-member {
+    border: 1px solid #8b0000 !important;
+    box-shadow: inset 0 0 10px rgba(139, 0, 0, 0.5);
+}
+
+
+
+
+/* ============================================================
+   5. 起承転結アコーディオン (STORY ACCORDION)
+   ============================================================ */
+
+/* アコーディオンを縦に並べるコンテナ */
+.accordion-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 25px;
+}
+
+/* 各ストーリーセクションの枠 */
+.story-detail {
+    background: #0d0d0d;
+    border: 1px solid #222;
+    transition: 0.3s;
+}
+
+/* クリックする見出し部分 */
+.story-header {
+    padding: 20px;
+    cursor: pointer;
+    list-style: none;
+    /* デフォルトの三角を消す(一般) */
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: #111;
+}
+
+/* Chrome/Safari用の三角消し */
+.story-header::-webkit-details-marker {
+    display: none;
+}
+
+.story-header:hover {
+    background: #1a1a1a;
+}
+
+/* 左側の「起・承・転・結」などの四角いラベル */
+.arc-step {
+    background: #8b4513;
+    color: #fff;
+    min-width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+/* 章のタイトル */
+.arc-title {
+    font-size: 1rem;
+    color: #ccc;
+    letter-spacing: 0.05em;
+}
+
+/* クライマックスや衝撃の展開用の赤強調設定 (red-alertクラス) */
+.red-alert {
+    border-color: #600;
+}
+
+.red-alert .arc-step {
+    background: #a00;
+}
+
+.red-alert .arc-title {
+    color: #ff4444;
+}
+
+/* 開いた時に現れる本文エリア */
+.story-body {
+    padding: 25px;
+    color: #bbb;
+    font-size: 0.95rem;
+    background: #050505;
+    border-top: 1px solid #222;
+    text-align: justify;
+}
+
+/* アコーディオンが開く時のアニメーション */
+.story-detail[open] .story-body {
+    animation: slideDown 0.4s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* ============================================================
+   6. ネタバレ警告セクション (SPOILER WARNING)
+   ============================================================ */
+
+/* 警告エリア全体の外枠 */
+.spoiler-wrapper {
+    margin: 60px auto;
+    border: 1px solid #8b0000;
+    background: #050505;
+    max-width: 900px;
+}
+
+/* 警告見出しのデザイン（真っ赤な背景） */
+.spoiler-accordion summary {
+    padding: 25px;
+    list-style: none;
+    cursor: pointer;
+    background: #100000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #4a0000;
+}
+
+.spoiler-accordion summary::-webkit-details-marker {
+    display: none;
+}
+
+/* 左側の警告アイコンとテキストのまとまり */
+.warning-header {
+    display: flex;
+    align-items: center;
+}
+
+/* 脈動する警告アイコン（!マークなど） */
+.warning-icon {
+    font-size: 2rem;
+    color: #ff0000;
+    margin-right: 20px;
+    animation: pulsate 2s infinite ease-in-out;
+}
+
+.warning-text strong {
+    color: #ff4444;
+    font-size: 1.1rem;
+    letter-spacing: 0.1em;
+}
+
+/* 右側の「OPEN」ボタン風デザイン */
+.click-to-open {
+    font-size: 0.8rem;
+    color: #ff4444;
+    border: 1px solid #8b0000;
+    padding: 5px 15px;
+    transition: 0.3s;
+}
+
+.spoiler-accordion summary:hover .click-to-open {
+    background: #8b0000;
+    color: #fff;
+}
+
+/* ネタバレ本文エリア */
+.spoiler-inner {
+    padding: 20px;
+    animation: fadeIn 0.8s ease-out;
+}
+
+/* --- 特殊アニメーション定義 --- */
+
+/* アイコンがボワボワ光る（鼓動）アニメーション */
+@keyframes pulsate {
+    0% {
+        opacity: 0.5;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.1);
+        text-shadow: 0 0 10px #ff0000;
+    }
+
+    100% {
+        opacity: 0.5;
+        transform: scale(1);
+    }
+}
+
+/* パッと現れるフェードイン */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ============================================================
+   7. 伏線タイムライン (CLUE TIMELINE)
+   ============================================================ */
+
+/* タイムライン全体の容器（左側の縦線が「運命の糸」） */
+.timeline-container {
+    position: relative;
+    max-width: 800px;
+    margin: 40px auto;
+    padding-left: 30px;
+    border-left: 1px solid #333;
+    /* 運命の縦線 */
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 50px;
+}
+
+/* タイムライン上の点（左側の丸い点） */
+.timeline-item::before {
+    content: "";
+    position: absolute;
+    left: -35px;
+    top: 5px;
+    width: 10px;
+    height: 10px;
+    background: #8b4513;
+    border: 2px solid #050505;
+    border-radius: 50%;
+    z-index: 1;
+}
+
+/* 時系列を示すラベル */
+.time-marker {
+    font-size: 0.75rem;
+    color: #8b4513;
+    letter-spacing: 0.2em;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+/* 伏線内容のカード */
+.timeline-content {
+    background: #0d0d0d;
+    padding: 20px;
+    border: 1px solid #1a1a1a;
+    transition: 0.3s;
+}
+
+/* ホバーで少し右にずれる演出 */
+.timeline-content:hover {
+    border-color: #600;
+    transform: translateX(10px);
+}
+
+.timeline-content h4 {
+    margin-top: 0;
+    color: #ff4444;
+    font-size: 1.1rem;
+}
+
+
+
+/*=========結論=========*/
+
+.analysis-section {
+    margin-top: 60px;
+    padding: 40px;
+    background: #000;
+    border: 1px solid #333;
+    position: relative;
+}
+
+.analysis-box {
+    border-left: 2px solid #8b4513;
+    /* ヘレディタリーのテーマカラー（茶/金） */
+    padding-left: 30px;
+}
+
+.analysis-header {
+    font-family: monospace;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #222;
+    padding-bottom: 10px;
+}
+
+.analysis-header .label {
+    color: #666;
+    margin-right: 10px;
+}
+
+.analysis-header .value {
+    color: #8b4513;
+    letter-spacing: 0.2em;
+}
+
+.analysis-text p {
+    color: #ccc;
+    line-height: 2;
+    margin-bottom: 1.5rem;
+    text-align: justify;
+}
+
+.analysis-conclusion {
+    margin-top: 30px;
+    font-family: "Sawarabi Mincho", serif;
+    font-size: 1.2rem;
+    color: #fff;
+    text-align: center;
+    border: 1px solid #8b4513;
+    padding: 15px;
+    background: rgba(139, 69, 19, 0.1);
+}
+
+
+
+
+
+/* ============================================================
+   8. 悪魔解説セクション (DEMON PROFILE)
+   ============================================================ */
+
+.demon-profile {
+    margin-top: 80px;
+    padding: 40px;
+    background-color: #080808;
+    border: 1px solid #4a3b2b;
+    color: #d2b48c;
+    /* 古紙のようなベージュ色 */
+    position: relative;
+    /* 背景の紋章配置用 */
+}
+
+/* 悪魔の階級や名前 */
+.profile-header {
+    border-bottom: 2px solid #8b4513;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+}
+
+.rank {
+    font-size: 0.8rem;
+    color: #ff4444;
+    font-weight: bold;
+    letter-spacing: 0.3em;
+}
+
+/* 注釈ボックス（古いメモ書き風） */
+.note-box {
+    background: rgba(139, 69, 19, 0.1);
+    border: 1px dashed #8b4513;
+    padding: 15px;
+    font-size: 0.85rem;
+    font-style: italic;
+    color: #bbb;
+}
+
+/* 悪魔の姿や紋章の画像（セピア調の加工） */
+.paimon-img,
+.paimon-seal {
+    width: 100%;
+    max-width: 200px;
+    height: auto;
+    border: 1px solid #4a3b2b;
+    padding: 8px;
+    background: #000;
+    filter: sepia(30%) contrast(110%);
+    /* 少し茶色く古ぼけさせる */
+    transition: filter 0.5s ease;
+}
+
+/* ホバーで画像が本来の色（鮮明）に戻る演出 */
+.paimon-img:hover,
+.paimon-seal:hover {
+    filter: sepia(0%) contrast(120%);
+}
+
+/* 背景にうっすら浮かび上がる巨大な紋章 */
+.demon-profile::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 400px;
+    height: 400px;
+    background: url('paimon_seal.png') no-repeat center;
+    background-size: contain;
+    opacity: 0.03;
+    /* ほとんど見えないくらいの薄さ */
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+}
+
+
+/* ============================================================
+   9. 深層考察：禁断の写本（DEEP ANALYSIS RE-DESIGN）
+   ============================================================ */
+
+.deep-analysis {
+    background: #080808;
+    border: 1px solid #3a2a1a;
+    /* 額縁のような古びた境界線 */
+    border-left: 8px solid #600;
+    /* 左側のラインをより重厚に */
+    padding: 50px 40px;
+    margin-top: 50px;
+    position: relative;
+    /* 羊皮紙のような質感をうっすら追加 */
+    background-image: radial-gradient(circle at center, rgba(20, 15, 10, 0.8) 0%, #050505 100%);
+}
+
+/* 考察ブロックの各見出し（なぜ「3体の首なし」なのか 等） */
+.analysis-block h4 {
+    color: #d2b48c;
+    /* 羊皮紙色 */
+    font-family: "Hiragino Mincho ProN", serif;
+    font-size: 1.5rem;
+    border-bottom: 1px solid #4a3b2b;
+    padding-bottom: 15px;
+    margin-bottom: 25px;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 1);
+    letter-spacing: 0.15em;
+}
+
+/* 本文テキスト：行間を少し詰め、古書のような密度に */
+.analysis-block p {
+    color: #a0a0a0;
+    line-height: 1.9;
+    text-align: justify;
+    margin-bottom: 25px;
+}
+
+/* 比較表：石板や古い木箱に刻まれたようなデザイン */
+.comparison-table table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 30px 0;
+    background: rgba(10, 10, 10, 0.5);
+}
+
+.comparison-table th {
+    background: #1a1510;
+    /* 焦げ茶色 */
+    color: #8b4513;
+    border: 1px solid #3a2a1a;
+    padding: 15px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.comparison-table td {
+    border: 1px solid #2a1a0a;
+    padding: 15px;
+    color: #888;
+    font-size: 0.9rem;
+    vertical-align: middle;
+}
+
+/* 表内の強調文字を血のような色に */
+.comparison-table td strong {
+    color: #8b0000;
+}
+
+/* 背景にうっすらと「しみ」や「汚れ」のようなテクスチャを出す（疑似要素） */
+.deep-analysis::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url("https://www.transparenttextures.com/patterns/clean-gray-paper.png");
+    /* 微細なノイズ */
+    opacity: 0.1;
+    pointer-events: none;
+}
+
+/* 配信・購入情報（事務的な切り取り線演出） */
+/* ============================================================
+   10. 配信情報（サイズ復元・雰囲気強化版）
+   ============================================================ */
+.streaming-info {
+    margin: 60px auto;
+    max-width: 800px;
+    /* 少し広げてゆとりを */
+    padding: 50px 30px;
+    background: #0a0a0a;
+    border: 1px solid #1a1a1a;
+    position: relative;
+    text-align: center;
+}
+
+/* 「この絶望を〜」のタイトルを1枚目のように力強く */
+.info-title {
+    color: #8b0000;
+    font-size: 1.8rem;
+    /* サイズアップ */
+    margin-bottom: 20px;
+    letter-spacing: 0.2em;
+    text-shadow: 0 0 15px rgba(139, 0, 0, 0.6);
+}
+
+.stream-buttons {
+    display: flex;
+    flex-direction: column;
+    /* 1枚目のように縦に積む */
+    gap: 15px;
+    margin: 30px 0;
+}
+
+/* ボタンのサイズを1枚目ベースに復元 */
+.stream-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 25px;
+    /* 1枚目のようなボリューム感 */
+    text-decoration: none;
+    transition: all 0.4s ease;
+    border: 1px solid transparent;
+}
+
+/* Amazon：彩度を少し抑えつつ、巨大な面積を維持 */
+.stream-btn.amzn {
+    background: #d89634;
+    /* 1枚目に近いオレンジを少し煤けさせた色 */
+    color: #000;
+}
+
+/* U-NEXT：1枚目の水色を夜の闇に馴染ませた色 */
+.stream-btn.unext {
+    background: #6bbce0;
+    color: #000;
+}
+
+/* Hulu：ブランドの黄緑色を、毒々しくも深みのある苔色に */
+.stream-btn.hulu {
+    background: #41811e;
+    /* 少し暗めのライムグリーン */
+    color: #fff;
+}
+
+/* Apple TV：Appleのミニマリズムを、冷たい鉄のようなグレーに */
+.stream-btn.apple {
+    background: #444444;
+    /* 鈍い光沢を感じさせるダークグレー */
+    color: #fff;
+}
+
+/* Google TV：Googleの赤を、古びた血のようなダークレッドに */
+.stream-btn.google {
+    background: #8b0000;
+    /* 深い赤（ダークレッド） */
+    color: #fff;
+}
+
+/* ホバー：サイズ感はそのままで、不気味に発光 */
+.stream-btn:hover {
+    transform: scale(1.02);
+    /* 巨大なまま少しだけ迫ってくる */
+    filter: brightness(1.2) contrast(1.1);
+    box-shadow: 0 0 30px rgba(139, 0, 0, 0.4);
+    border-color: #8b0000;
+}
+
+/* ボタン内の文字デザイン */
+.btn-label {
+    font-size: 0.8rem;
+    margin-bottom: 5px;
+    opacity: 0.8;
+}
+
+.btn-action {
+    font-size: 1.2rem;
+    font-weight: bold;
+    letter-spacing: 0.1em;
+}
+
+
+/* ============================================================
+   11. おすすめ映画 (RECOMMENDATIONS)
+   ============================================================ */
+
+.recommend-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.recommend-card {
+    background: #111;
+    border: 1px solid #333;
+    padding: 20px;
+    transition: 0.3s;
+}
+
+.recommend-card:hover {
+    border-color: #8b0000;
+    transform: translateY(-5px);
+}
+
+/* 「必見」などのラベル */
+.card-badge {
+    display: inline-block;
+    background: #8b0000;
+    color: #fff;
+    font-size: 0.7rem;
+    padding: 2px 8px;
+    font-weight: bold;
+}
+
+/* ============================================================
+   12. フッター & 固定ナビゲーション (FOOTER & FLOATING UI)
+   ============================================================ */
+
+/* フッター全体：サイトの終焉を演出するエリア */
+.site-footer {
+    background: #050505;
+    /* 漆黒 */
+    color: #888;
+    padding: 60px 20px 30px;
+    border-top: 1px solid #222;
+    font-family: 'serif';
+    position: relative;
+    overflow: hidden;
+}
+
+.footer-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+/* フッターのロゴ：羊皮紙×深紅の配色 */
+.footer-logo {
+    color: #d2b48c;
+    /* 羊皮紙の色 */
+    font-size: 1.5rem;
+    letter-spacing: 0.3em;
+    margin-bottom: 10px;
+}
+
+.footer-logo span {
+    display: block;
+    font-size: 0.7rem;
+    color: #8b0000;
+    /* 深紅 */
+    letter-spacing: 0.1em;
+    margin-top: 5px;
+}
+
+/* 最後のメッセージ：斜体（italic）で不気味な余韻を出す */
+.footer-message {
+    font-size: 0.85rem;
+    line-height: 1.8;
+    margin-bottom: 40px;
+    color: #666;
+    font-style: italic;
+}
+
+/* フッター下部：著作権表示など */
+.footer-bottom {
+    border-top: 1px solid #1a1a1a;
+    padding-top: 25px;
+}
+
+.copyright {
+    font-size: 0.7rem;
+    letter-spacing: 0.05em;
+    color: #444;
+}
+
+/* --- 浮遊ボタン（トップへ戻る / HOME） --- */
+
+/* 共通設定：画面右下に固定される赤いボタン */
+.back-to-top,
+.home-button {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: rgba(10, 0, 0, 0.8);
+    /* 闇に溶ける黒赤 */
+    border: 1px solid #8b0000;
+    /* 深紅の縁取り */
+    color: #8b0000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    z-index: 999;
+}
+
+/* トップへ戻るボタン固有のサイズ */
+.back-to-top {
+    width: 45px;
+    height: 45px;
+    border-radius: 5px;
+    /* 少し角を残すのがこだわり */
+    transition: all 0.3s ease;
+}
+
+/* HOMEボタン固有のサイズとアニメーション */
+.home-button {
+    width: 50px;
+    height: 50px;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ホバー時の発光演出：浮き上がりながら赤く光る */
+.back-to-top:hover,
+.home-button:hover {
+    background: #8b0000;
+    color: #fff;
+    transform: translateY(-5px) scale(1.1);
+    box-shadow: 0 0 20px rgba(139, 0, 0, 0.7);
+    /* 赤い後光 */
+}
+
+/* アイコン（SVG）のサイズ調整 */
+.back-to-top svg {
+    width: 20px;
+    height: 20px;
+}
