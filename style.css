@@ -1,0 +1,591 @@
+/* ============================================================
+   1. 基本設定 (GLOBAL SETTINGS)
+   ============================================================ */
+body {
+    background-color: #050505;
+    color: #e0e0e0;
+    font-family: "Hiragino Mincho ProN", "MS Mincho", serif;
+    margin: 0;
+    line-height: 1.8;
+}
+
+/* ヘッダー全体のレイアウト */
+header {
+    text-align: center;
+    padding: 60px 20px;
+    border-bottom: 1px solid #1a1a1a;
+}
+
+.top-header {
+    text-align: center;
+    padding: 80px 20px 50px;
+    background-color: #000;
+}
+
+/* メインタイトルと赤いサブタイトル */
+.main-title {
+    color: #e0e0e0;
+    font-family: 'serif';
+    font-size: 2.5rem;
+    letter-spacing: 0.1em;
+    margin: 0;
+}
+
+.main-title span {
+    display: block;
+    font-size: 0.9rem;
+    color: #8b0000;
+    /* 血の赤 */
+    margin-top: 15px;
+    letter-spacing: 0.3em;
+    font-weight: normal;
+}
+
+/* 導入文の装飾枠（左右の線） */
+.intro-text-wrapper {
+    max-width: 600px;
+    margin: 40px auto 0;
+    border-left: 1px solid #333;
+    border-right: 1px solid #333;
+    padding: 0 20px;
+}
+
+.intro-text-wrapper p {
+    color: #999;
+    font-size: 0.9rem;
+    line-height: 2;
+    text-align: justify;
+}
+
+.intro-text-wrapper strong {
+    color: #d2b48c;
+    /* 羊皮紙の色 */
+}
+
+/* じわじわ点滅するアニメーション設定 */
+.intro-text-wrapper span {
+    display: block;
+    margin-top: 20px;
+    font-size: 0.8rem;
+    color: #666;
+    animation: fadeInOut 3s infinite;
+}
+
+@keyframes fadeInOut {
+
+    0%,
+    100% {
+        opacity: 0.3;
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
+
+
+
+
+
+
+
+/* ロゴ・サブタイトル */
+.site-logo {
+    font-size: 3rem;
+    letter-spacing: 0.6em;
+    color: #8b4513;
+    margin: 0;
+}
+
+.site-sub {
+    font-size: 0.8rem;
+    color: #555;
+    letter-spacing: 0.2em;
+}
+
+
+/* ============================================================
+   2. 映画カード配置 (LAYOUT)
+   ============================================================ */
+.container {
+    padding: 60px 20px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* カードを横に並べる親要素の指定 */
+.movie-archive-list {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    justify-content: center;
+    gap: 40px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+
+/* ============================================================
+   3. カード個別のデザイン (CARD DESIGN)
+   ============================================================ */
+.movie-card {
+    flex: 0 0 320px;
+    width: 320px;
+    min-height: 450px;
+    background: #0a0a0a;
+    border: 1px solid #222;
+    position: relative;
+    display: block;
+    /* aタグとして全体をクリック可能に */
+    text-decoration: none;
+    color: inherit;
+    /* transitionを整理：変化のタイミングをプロっぽく */
+    transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1),
+        border-color 0.3s ease,
+        box-shadow 0.3s ease;
+    overflow: hidden;
+    /* 画像の角丸をはみ出させない */
+    border-radius: 8px;
+}
+
+.movie-card img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 8px 8px 0 0;
+    background-color: #2a2a2a;
+    display: block;
+    /* 画像もホバー時に動くように準備 */
+    transition: transform 0.5s ease, filter 0.5s ease;
+}
+
+/* --- カードにマウスを乗せた時の動き（共通） --- */
+.movie-card:hover {
+    transform: translateY(-12px);
+    /* 少し大胆に浮かせる */
+    border-color: #444;
+    /* 共通のホバー色は少し明るく */
+}
+
+/* 画像ズーム演出 */
+.movie-card:hover img {
+    transform: scale(1.08);
+    /* 画像がジワッと寄る */
+    filter: brightness(1.2);
+    /* 少し発光させる */
+}
+
+/* --- 【追加】映画ごとの光（グロー）演出 --- */
+/* ヘレディタリー用 */
+.movie-card.hereditary:hover {
+    border-color: #8b4513;
+    /* 劇中のオレンジがかった茶色 */
+    box-shadow: 0 15px 35px rgba(139, 69, 19, 0.4);
+}
+
+/* 女神の継承用 */
+.movie-card.medium:hover {
+    border-color: #2e8b57;
+    /* 湿った森の緑 */
+    box-shadow: 0 15px 35px rgba(46, 139, 87, 0.4);
+}
+
+
+/* ============================================================
+   3. カード個別のデザイン (CARD DESIGN)
+   ============================================================ */
+.movie-card {
+    flex: 0 0 320px;
+    width: 320px;
+    min-height: 450px;
+    background: #0a0a0a;
+    border: 1px solid #222;
+    position: relative;
+    display: block;
+    /* aタグとして全体をクリック可能に */
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1),
+        border-color 0.3s ease,
+        box-shadow 0.3s ease;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+.movie-card img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 8px 8px 0 0;
+    background-color: #2a2a2a;
+    display: block;
+    transition: transform 0.5s ease, filter 0.5s ease;
+}
+
+/* --- カードにマウスを乗せた時の動き（共通） --- */
+.movie-card:hover {
+    transform: translateY(-12px);
+    border-color: #444;
+}
+
+.movie-card:hover img {
+    transform: scale(1.08);
+    filter: brightness(1.2);
+}
+
+/* --- 【追加】映画ごとの個別演出 --- */
+
+/* ヘレディタリー */
+.movie-card.hereditary:hover {
+    border-color: #8b4513;
+    box-shadow: 0 15px 35px rgba(139, 69, 19, 0.4);
+}
+
+.movie-card.hereditary .genre {
+    display: block;
+    font-size: 0.75rem;
+    color: #8b4513;
+    /* 基本の茶色 */
+    letter-spacing: 0.25em;
+    margin-top: 15px;
+    margin-bottom: 5px;
+}
+
+/* 女神の継承 */
+.movie-card.medium:hover {
+    border-color: #2e8b57;
+    box-shadow: 0 15px 35px rgba(46, 139, 87, 0.4);
+}
+
+.movie-card.medium .genre {
+    color: #2e8b57 !important;
+    /* 強制的に緑にする */
+}
+
+/* エスター */
+.movie-card.orphan:hover {
+    border-color: #1e3a5f;
+    box-shadow: 0 15px 35px rgba(30, 58, 95, 0.5);
+}
+
+.movie-card.orphan .genre {
+    color: #4682b4 !important;
+    /* 強制的に青にする */
+}
+
+/* --- パーツのデザイン --- */
+
+.card-inner {
+    width: 100%;
+    text-align: center;
+    word-wrap: break-word;
+    padding-bottom: 20px;
+}
+
+.card-title {
+    font-size: 1.8rem;
+    letter-spacing: 0.15em;
+    margin: 20px 0 10px 0;
+    line-height: 1.2;
+    transition: color 0.3s ease;
+}
+
+.movie-card:hover .card-title {
+    color: #fff;
+}
+
+.genre {
+    display: block;
+    font-size: 0.75rem;
+    color: #8b4513;
+    /* 基本の茶色 */
+    letter-spacing: 0.25em;
+    margin-top: 15px;
+    margin-bottom: 5px;
+}
+
+.card-tagline {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 20px;
+    padding: 0 15px;
+}
+
+.click-info {
+    font-size: 0.7rem;
+    border-top: 1px solid #222;
+    padding-top: 15px;
+    width: 70%;
+    margin: 0 auto;
+    color: #444;
+    transition: all 0.3s ease;
+}
+
+.movie-card:hover .click-info {
+    color: #aaa;
+    border-top-color: #444;
+}
+
+/* ナビゲーションボタン */
+.nav-btn:hover {
+    background: rgba(139, 0, 0, 0.5);
+    color: white;
+    border-color: #8b0000;
+}
+
+
+
+
+/* --- 機密事項カード専用：ノイズとバグの演出 --- */
+
+/* 1. カード全体の雰囲気を「遮断」された感じに */
+.movie-card.classified {
+    cursor: not-allowed;
+    /* 禁止マークのカーソル */
+    background: #050505;
+}
+
+/* 2. 画像の上に「砂嵐」をのせる */
+.movie-card.classified .image-container {
+    position: relative;
+    overflow: hidden;
+}
+
+.glitch-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('https://upload.wikimedia.org/wikipedia/commons/7/76/1k_Phase_Noise.png');
+    /* 砂嵐画像 */
+    opacity: 0.15;
+    z-index: 2;
+    pointer-events: none;
+    animation: noise-anim 0.2s infinite;
+    /* 高速で動かす */
+}
+
+/* 3. 砂嵐のアニメーション */
+@keyframes noise-anim {
+    0% {
+        transform: translate(0, 0);
+    }
+
+    10% {
+        transform: translate(-5%, -5%);
+    }
+
+    30% {
+        transform: translate(5%, 5%);
+    }
+
+    50% {
+        transform: translate(-10%, 0);
+    }
+
+    70% {
+        transform: translate(10%, 5%);
+    }
+
+    100% {
+        transform: translate(0, 0);
+    }
+}
+
+/* 4. ホバー時の「警告」演出 */
+.movie-card.classified:hover {
+    border-color: #ff0000;
+    /* 赤い警告色 */
+    box-shadow: 0 0 25px rgba(255, 0, 0, 0.4);
+}
+
+.movie-card.classified:hover .card-title {
+    color: #ff0000;
+    text-shadow: 2px 2px 0px #000, -1px -1px 5px #f00;
+    /* 文字がバグったような影 */
+}
+
+.movie-card.classified:hover .glitch-overlay {
+    opacity: 0.4;
+    /* ホバーすると砂嵐が激しくなる */
+}
+
+/* 5. ジャンルタグも特別仕様に */
+.movie-card.classified .genre {
+    color: #ff0000 !important;
+    font-weight: bold;
+}
+
+
+
+/* 全体のオーバーレイ（背景の黒い膜） */
+.main {
+    display: none;
+    /* 初期状態は非表示 */
+    position: fixed;
+    /* 画面に固定 */
+    z-index: 999;
+    /* 最前面に表示 */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.98);
+    /* ほぼ真っ黒な背景 */
+    overflow-y: auto;
+    /* 中身が長い場合にスクロール可能にする */
+}
+
+.main-content {
+    background: #080808;
+    margin: 3% auto;
+    padding: 40px;
+    width: 95%;
+    max-width: 850px;
+    border: 1px solid #222;
+    position: relative;
+    box-sizing: border-box;
+}
+
+/* 閉じるボタン (右上) */
+.close-btn {
+    position: absolute;
+    right: 30px;
+    top: 20px;
+    font-size: 1rem;
+    color: #555;
+    cursor: pointer;
+    letter-spacing: 0.1em;
+}
+
+.close-btn:hover {
+    color: #fff;
+}
+
+/* モーダル内の血筋をイメージした赤タイトル */
+.blood-title {
+    color: #a00000;
+    font-size: 2.2rem;
+    border-bottom: 1px solid #222;
+    padding-bottom: 10px;
+    margin-top: 0;
+}
+
+/* イントロダクション・セクションのレイアウト */
+.intro-section {
+    max-width: 800px;
+    margin: 40px auto 60px;
+    padding: 0 20px;
+}
+
+/* 導入文を囲む装飾ボックス */
+.intro-box {
+    background: rgba(20, 20, 20, 0.7);
+    border-top: 1px solid #444;
+    border-bottom: 1px solid #444;
+    padding: 30px;
+    position: relative;
+}
+
+/* ボックス左上の十字架「†」装飾 */
+.intro-box::before {
+    content: '†';
+    position: absolute;
+    top: 5px;
+    left: 10px;
+    color: #8b0000;
+    font-size: 1.2rem;
+}
+
+/* 導入文のテキストスタイル */
+.intro-text {
+    color: #ccc;
+    line-height: 2;
+    text-align: center;
+    font-size: 0.95rem;
+    letter-spacing: 0.05em;
+}
+
+/* 強調テキスト（発光する赤） */
+.intro-text strong {
+    color: #ff4444;
+    text-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
+}
+
+
+
+
+/*==============スマホ用==============*/
+
+/* ============================================================
+   4. レスポンシブ対応 (MOBILE OPTIMIZATION)
+   ============================================================ */
+
+@media (max-width: 850px) {
+
+    /* 1. 親要素：折り返しを禁止し、中身を画面内に押し込める */
+    .movie-archive-list {
+        display: flex !important;
+        flex-direction: row !important;
+        /* 横並びを維持 */
+        flex-wrap: nowrap !important;
+        /* 絶対に折り返さない */
+        gap: 10px;
+        /* カードの間隔を狭くする */
+        padding: 10px;
+        width: 100%;
+        box-sizing: border-box;
+        justify-content: space-around;
+        /* 均等に配置 */
+    }
+
+    /* 2. カード：固定幅を解除し、4枚が等幅で収まるようにする */
+    .movie-card {
+        flex: 1 1 0;
+        /* 4枚で均等に分け合う */
+        min-width: 0;
+        /* 圧縮を許可 */
+        width: auto;
+        /* 固定幅を解除 */
+
+        /* 【修正】Firefox 互換性を考慮したリセット */
+        min-height: 0;
+        /* 最小高さの制限を完全に撤廃 */
+        height: auto;
+        /* 中身のコンテンツ量に高さを任せる */
+
+        padding: 5px;
+        border-radius: 4px;
+    }
+
+    /* 3. 中身の調整：文字サイズをかなり小さくしないとはみ出します */
+    .card-title {
+        font-size: 0.7rem;
+        /* 文字を極小に */
+        margin: 10px 0 5px 0;
+        letter-spacing: 0.05em;
+    }
+
+    .genre {
+        font-size: 0.5rem;
+        /* ジャンル名も最小に */
+        margin-top: 5px;
+    }
+
+    .card-tagline,
+    .click-info {
+        display: none;
+        /* スマホ版では説明文を消してスッキリさせる（推奨） */
+    }
+
+    /* 4. 画像の調整 */
+    .movie-card img {
+        height: 100px;
+        /* 高さを抑えて、縦長になりすぎないように */
+        object-fit: cover;
+    }
+}
