@@ -1,0 +1,710 @@
+/* 全体設定 */
+* {
+    box-sizing: border-box;
+}
+
+/* --- ベース設定の更新 --- */
+body {
+    background-color: #000;
+    /* 完全な黒 */
+    color: #a0a0a0;
+    margin: 0;
+    font-family: 'Sawarabi Mincho', serif;
+    line-height: 1.8;
+    position: relative;
+    overflow-x: hidden;
+    /* ページ全体を巨大な遠近空間にする */
+    perspective: 1000px;
+}
+
+/* --- 【新】トンネル背景デザイン (一から構築) --- */
+
+/* 1. トンネルの「壁面」 (ザラついた土と岩) */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* 渦巻くようなグラデーションで、円形の壁を表現 */
+    background:
+        repeating-radial-gradient(circle at center,
+            #050505 0px,
+            #0a0a0a 50px,
+            #050505 100px);
+    background-size: 100% 100%;
+    opacity: 0.2;
+    /* うっすらと壁の存在感を出す */
+    pointer-events: none;
+    z-index: -2;
+    /* 遠近感を強調 */
+    transform: translateZ(-500px) scale(2);
+}
+
+/* 2. トンネルの「奥行き」と「最奥の暗黒」 (巨大なスポットライト) */
+body::after {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* 中央に向かって急激に暗くなる、円錐形のグラデーション */
+    background:
+        radial-gradient(circle at center,
+            transparent 0%,
+            /* 中央（奥）は完全な暗黒 */
+            rgba(0, 0, 0, 0.8) 30%,
+            /* 周囲から闇が迫る */
+            rgba(10, 5, 0, 0.5) 60%,
+            /* 湿った土の色 */
+            #000 100%
+            /* 手前は完全に閉じる */
+        );
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* 3. トンネルに刻まれた「呪いの紋様」 (浮遊背景) */
+.background-pattern {
+    position: fixed;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    /* 以前の紋様を、より有機的で不規則なシミのようなパターンに変更 */
+    background-image:
+        radial-gradient(#111 1px, transparent 1px),
+        radial-gradient(#1a1a1a 1px, transparent 1px);
+    background-size: 50px 50px, 80px 80px;
+    background-position: 0 0, 25px 25px;
+    opacity: 0.1;
+    /* 非常に薄く、壁のシミのように配置 */
+    /* ゆっくりと回転させ、空間が歪んでいるように見せる */
+    animation: tunnel-distortion 180s linear infinite;
+    pointer-events: none;
+    z-index: -3;
+    /* 遠近空間に配置 */
+    transform: translateZ(-800px) scale(3);
+}
+
+/* トンネルの歪みアニメーション */
+@keyframes tunnel-distortion {
+    0% {
+        transform: translateZ(-800px) rotate(0deg);
+    }
+
+    100% {
+        transform: translateZ(-800px) rotate(360deg);
+    }
+}
+
+
+.container {
+    max-width: 750px;
+    margin: 0 auto;
+    padding: 80px 30px;
+    /* 墨を薄く流したような背景を追加して、下の紋様と分離させる */
+    background: rgba(5, 5, 5, 0.85);
+    box-shadow: 0 0 100px 50px rgba(5, 5, 5, 0.9);
+    position: relative;
+    z-index: 10;
+}
+
+.time-event p {
+    font-size: 0.95rem;
+    /* 少し大きく */
+    color: #bbb;
+    /* 明るめのグレーにして視認性アップ */
+    line-height: 1.9;
+}
+
+.time-event h4 {
+    color: #d2b48c;
+    /* 祈祷師の家系でも使った「くすんだ金」をアクセントに */
+    border-bottom: 1px solid #444;
+    /* 見出しの区切りを明確に */
+    padding-bottom: 5px;
+    margin-top: 15px;
+}
+
+/* タイトル周り */
+.main-header {
+    text-align: center;
+    margin-bottom: 80px;
+}
+
+.title-main {
+    color: #a00000;
+    text-shadow: 0 0 15px rgba(0, 0, 0, 1);
+    /* 文字の周りを黒くして浮かせる */
+}
+
+.meta-info {
+    font-size: 0.7rem;
+    color: #444;
+    letter-spacing: 0.3em;
+    margin-top: 10px;
+}
+
+/* テキスト演出 */
+.ritual-text {
+    font-size: 1.2rem;
+    text-align: center;
+    color: #ccc;
+    margin-bottom: 60px;
+    line-height: 2.5;
+}
+
+.unholy-word {
+    transition: color 2.5s ease;
+    color: inherit;
+}
+
+.unholy-word.active {
+    color: #ff0000;
+    text-shadow: 0 0 10px rgba(255, 0, 0, 0.6);
+}
+
+
+
+
+/*あらすじ*/
+
+.synopsis {
+    border-top: 1px solid #1a1a1a;
+    padding-top: 40px;
+}
+
+.sub-heading {
+    font-size: 0.9rem;
+    color: #8b0000;
+    letter-spacing: 0.2em;
+}
+
+.synopsis p {
+    font-size: 0.95rem;
+    text-align: justify;
+}
+
+/* フォームデザイン */
+.contact-area {
+    margin-top: 100px;
+    text-align: center;
+}
+
+.contact-hint {
+    font-size: 0.75rem;
+    color: #444;
+    margin-bottom: 20px;
+}
+
+.curse-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.curse-form input,
+.curse-form textarea {
+    background: #0a0a0a;
+    border: 1px solid #222;
+    color: #ccc;
+    padding: 12px;
+    font-family: inherit;
+    font-size: 0.85rem;
+}
+
+.curse-form button {
+    background: transparent;
+    border: 1px solid #8b0000;
+    color: #8b0000;
+    padding: 15px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.curse-form button:hover {
+    background: #8b0000;
+    color: #fff;
+}
+
+.minimal-footer {
+    text-align: center;
+    padding: 40px;
+    font-size: 0.6rem;
+    color: #222;
+}
+
+/* アニメーション */
+@keyframes revealTitle {
+    to {
+        opacity: 1;
+        filter: blur(0);
+        transform: scale(1.05);
+    }
+}
+
+
+
+
+
+
+/* 時系列セクションのスタイル */
+/* アコーディオン全体のスタイル */
+.forbidden-archive {
+    border: 1px dashed #400;
+    background: rgba(10, 0, 0, 0.5);
+    margin: 40px 0;
+    cursor: pointer;
+}
+
+/* 警告文の見た目 */
+.warning-trigger {
+    padding: 30px;
+    color: #8b0000;
+    text-align: center;
+    list-style: none;
+    /* デフォルトの矢印を消す */
+    font-weight: bold;
+    letter-spacing: 0.1em;
+    transition: 0.3s;
+}
+
+.warning-trigger:hover {
+    background: rgba(139, 0, 0, 0.1);
+    color: #ff0000;
+}
+
+.warning-sub {
+    display: block;
+    font-size: 0.7rem;
+    color: #444;
+    margin-top: 10px;
+}
+
+/* 開いた後の中身 */
+.archive-content {
+    padding: 40px 20px;
+    border-top: 1px solid #400;
+    background: #000;
+    cursor: default;
+    animation: fadeInArchive 1.5s ease-in;
+}
+
+@keyframes fadeInArchive {
+    from {
+        opacity: 0;
+        filter: blur(10px);
+    }
+
+    to {
+        opacity: 1;
+        filter: blur(0);
+    }
+}
+
+/* デフォルトの矢印を隠す（Safari/Chrome対策） */
+.warning-trigger::-webkit-details-marker {
+    display: none;
+}
+
+
+
+
+.timeline-container {
+    margin-top: 80px;
+    padding-left: 20px;
+    border-left: 1px solid #1a1a1a;
+    /* 縦のライン */
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 50px;
+    padding-left: 30px;
+}
+
+/* タイムラインのポインター（点） */
+.timeline-item::before {
+    content: "";
+    position: absolute;
+    left: -5.5px;
+    top: 5px;
+    width: 10px;
+    height: 10px;
+    background-color: #333;
+    border-radius: 50%;
+}
+
+.time-stamp {
+    font-size: 0.75rem;
+    color: #8b0000;
+    font-weight: bold;
+    letter-spacing: 0.2em;
+    margin-bottom: 5px;
+}
+
+.time-event p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #888;
+    line-height: 1.8;
+}
+
+/* 警告セクション（現在）の特殊演出 */
+.timeline-item.highlight::before {
+    background-color: #ff0000;
+    box-shadow: 0 0 10px #ff0000;
+}
+
+.timeline-item.highlight .time-event p {
+    color: #ccc;
+    font-weight: bold;
+}
+
+/* 時系列の見出し */
+.time-event h4 {
+    color: #b59a6d;
+    /* くすんだ金のような色 */
+    font-size: 1rem;
+    margin: 5px 0 10px 0;
+    letter-spacing: 0.1em;
+}
+
+/* 内容の文章 */
+.time-event p {
+    font-size: 0.85rem;
+    line-height: 1.8;
+    color: #999;
+}
+
+/* 最終段階（拡散）の特殊演出 */
+.timeline-item.critical::before {
+    background-color: #ff0000;
+    box-shadow: 0 0 15px #ff0000;
+    animation: pulse 1.5s infinite;
+}
+
+.timeline-item.critical h4 {
+    color: #ff0000;
+    text-shadow: 0 0 8px rgba(255, 0, 0, 0.5);
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scale(1.5);
+        opacity: 0.5;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* 侵食の詳細セクションを少し不気味に歪ませる */
+.erosion-detail,
+.madness-detail,
+.decode-detail {
+    border-left: 2px solid #4a0000;
+}
+
+/* 精神の破綻セクションのテキストに微細なブレを付与 */
+.madness-detail h4 {
+    animation: text-glitch 4s infinite;
+}
+
+@keyframes text-glitch {
+    0% {
+        transform: translate(0);
+    }
+
+    1% {
+        transform: translate(-1px, 1px) skewX(2deg);
+        color: #ff0000;
+    }
+
+    2% {
+        transform: translate(0);
+    }
+
+    100% {
+        transform: translate(0);
+    }
+}
+
+/* 段落テキストの明度を徐々に上げる（真実に近づく演出） */
+.decode-detail p {
+    color: #bbb;
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.1);
+}
+
+
+
+/* --- 閲覧注意（アコーディオン）全体 --- */
+.forbidden-archive {
+    border: 1px dashed #4a0000;
+    background: rgba(10, 0, 0, 0.95);
+    margin: 40px auto;
+    width: 95%;
+    /* スマホで左右に余裕を持たせる */
+    max-width: 800px;
+    cursor: pointer;
+}
+
+/* 警告の見出し部分 */
+.warning-trigger {
+    padding: 30px 15px;
+    color: #8b0000;
+    text-align: center;
+    list-style: none;
+    /* デフォルトの矢印を消す */
+    font-weight: bold;
+    letter-spacing: 0.1em;
+    outline: none;
+    transition: background 0.3s;
+}
+
+.warning-trigger::-webkit-details-marker {
+    display: none;
+}
+
+.warning-trigger:hover {
+    background: rgba(139, 0, 0, 0.15);
+    color: #ff0000;
+}
+
+.warning-icon {
+    display: block;
+    font-size: 2rem;
+    margin-bottom: 10px;
+    /* 警告マークを鼓動させる */
+    animation: pulse 2s infinite;
+}
+
+.warning-sub {
+    display: block;
+    font-size: 0.7rem;
+    color: #555;
+    margin-top: 10px;
+}
+
+/* 開いた後の中身 */
+.archive-content {
+    padding: 20px 10px;
+    border-top: 1px solid #4a0000;
+    background: #000;
+    cursor: default;
+    /* 開いた瞬間の「霧消」アニメーション */
+    animation: revealBlur 1.5s ease-out forwards;
+}
+
+@keyframes revealBlur {
+    from {
+        opacity: 0;
+        filter: blur(20px);
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        filter: blur(0);
+        transform: translateY(0);
+    }
+}
+
+/* --- スマホ用調整 --- */
+@media screen and (max-width: 480px) {
+    .timeline-container {
+        padding-left: 10px;
+    }
+
+    .timeline-item {
+        padding-left: 20px;
+        margin-bottom: 35px;
+    }
+
+    .time-event p {
+        font-size: 0.8rem;
+    }
+}
+
+
+
+
+
+
+/* 解析セクションのスタイル */
+.analysis-section {
+    margin-top: 100px;
+    padding-bottom: 100px;
+}
+
+.analysis-box {
+    background: rgba(20, 0, 0, 0.3);
+    /* 非常に薄い血の色 */
+    border: 1px solid #300;
+    padding: 30px;
+    margin-bottom: 40px;
+    position: relative;
+}
+
+.analysis-box h3 {
+    color: #8b0000;
+    font-size: 1.1rem;
+    margin-top: 0;
+    border-left: 4px solid #8b0000;
+    padding-left: 15px;
+}
+
+.analysis-box p {
+    font-size: 0.9rem;
+    color: #999;
+    line-height: 2;
+}
+
+@keyframes text-shake {
+    0% {
+        transform: translate(0, 0);
+    }
+
+    100% {
+        transform: translate(1px, -1px);
+    }
+}
+
+/* スクロールに合わせて浮き上がる演出を想定 */
+.analysis-box {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 1.5s ease;
+}
+
+.analysis-box.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+
+
+
+
+
+/* ============================================================
+   フッター & 固定ナビゲーション (FOOTER & FLOATING UI)
+   ============================================================ */
+
+.site-footer {
+    background: #050505;
+    /* 漆黒 */
+    color: #888;
+    padding: 60px 20px 30px;
+    border-top: 1px solid #222;
+    font-family: 'serif';
+    position: relative;
+    overflow: hidden;
+}
+
+.footer-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+/* フッターのロゴ：羊皮紙×深紅の配色 */
+.footer-logo {
+    color: #d2b48c;
+    /* 羊皮紙の色 */
+    font-size: 1.5rem;
+    letter-spacing: 0.3em;
+    margin-bottom: 10px;
+}
+
+.footer-logo span {
+    display: block;
+    font-size: 0.7rem;
+    color: #8b0000;
+    /* 深紅 */
+    letter-spacing: 0.1em;
+    margin-top: 5px;
+}
+
+/* 最後のメッセージ：斜体（italic）で不気味な余韻を出す */
+.footer-message {
+    font-size: 0.85rem;
+    line-height: 1.8;
+    margin-bottom: 40px;
+    color: #666;
+    font-style: italic;
+}
+
+/* フッター下部：著作権表示など */
+.footer-bottom {
+    border-top: 1px solid #1a1a1a;
+    padding-top: 25px;
+}
+
+.copyright {
+    font-size: 0.7rem;
+    letter-spacing: 0.05em;
+    color: #444;
+}
+
+/* --- 浮遊ボタン（トップへ戻る / HOME） --- */
+
+/* 共通設定：画面右下に固定される赤いボタン */
+.back-to-top,
+.home-button {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: rgba(10, 0, 0, 0.8);
+    /* 闇に溶ける黒赤 */
+    border: 1px solid #8b0000;
+    /* 深紅の縁取り */
+    color: #8b0000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    z-index: 999;
+}
+
+/* トップへ戻るボタン固有のサイズ */
+.back-to-top {
+    width: 45px;
+    height: 45px;
+    border-radius: 5px;
+    /* 少し角を残すのがこだわり */
+    transition: all 0.3s ease;
+}
+
+/* HOMEボタン固有のサイズとアニメーション */
+.home-button {
+    width: 50px;
+    height: 50px;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ホバー時の発光演出：浮き上がりながら赤く光る */
+.back-to-top:hover,
+.home-button:hover {
+    background: #8b0000;
+    color: #fff;
+    transform: translateY(-5px) scale(1.1);
+    box-shadow: 0 0 20px rgba(139, 0, 0, 0.7);
+    /* 赤い後光 */
+}
+
+/* アイコン（SVG）のサイズ調整 */
+.back-to-top svg {
+    width: 20px;
+    height: 20px;
+}
